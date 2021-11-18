@@ -16,20 +16,30 @@ class BannerController extends Controller
 {
     function index()
     {
+
         $banners = Banner::latest()->paginate(config('default_pagination'));
         return view('admin-views.banner.index', compact('banners'));
     }
 
     public function store(Request $request)
-    {        
+    {
+//        dd($request->all());
         $validator = Validator::make($request->all(), [
             'title' => 'required',
             'image' => 'required',
             'banner_type' => 'required',
+            'ads_type' => 'required',
             'zone_id' => 'required',
-            'restaurant_id' => 'required_if:banner_type,restaurant_wise',
+            'restaurant_id' => 'required_if:ads_type,restaurant_wise',
             'item_id' => 'required_if:banner_type,item_wise',
+            'type_count' => 'required_unless:ads_type,duration',
+            'start_date' => 'required_if:ads_type,duration',
+            'end_date' => 'required_if:ads_type,duration',
         ], [
+            'ads_type' => 'ads type is required!',
+            'start_date' => 'start date is required!',
+            'end_date' => 'end date is required!',
+            'type_count' => 'count is required!',
             'title.required' => 'Title is required!',
             'zone_id.required' => 'Zone is required!',
             'restaurant_id.required_if'=> "Restaurant is required when banner type is restaurant wise",
@@ -39,15 +49,17 @@ class BannerController extends Controller
         if ($validator->fails()) {
             return response()->json(['errors' => Helpers::error_processor($validator)]);
         }
-
         $banner = new Banner;
         $banner->title = $request->title;
         $banner->type = $request->banner_type;
         $banner->zone_id = $request->zone_id;
         $banner->image = Helpers::upload('banner/', 'png', $request->file('image'));
         $banner->data = ($request->banner_type == 'restaurant_wise')?$request->restaurant_id:$request->item_id;
+        $banner->ads_type = $request->ads_type;
+        $banner->start_date = $request->start_date;
+        $banner->end_date = $request->end_date;
+        $banner->type_count = $request->type_count;
         $banner->save();
- 
         return response()->json([], 200);
     }
 
@@ -87,7 +99,7 @@ class BannerController extends Controller
             'item_id.required_if'=> "Food is required when banner type is food wise",
         ]);
 
-   
+
         $banner->title = $request->title;
         $banner->type = $request->banner_type;
         $banner->zone_id = $request->zone_id;

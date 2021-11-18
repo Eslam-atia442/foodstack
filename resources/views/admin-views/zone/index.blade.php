@@ -231,7 +231,7 @@
             controlUI.addEventListener("click", () => {
                 lastpolygon.setMap(null);
                 $('#coordinates').val('');
-                
+
             });
         }
 
@@ -313,14 +313,14 @@
                         }));
                         polygons[i].setMap(map);
                     }
-  
+
                 },
             });
         }
         $(document).on('ready', function(){
             set_all_zones();
         });
-        
+
     </script>
     <script>
         $('#search-form').on('submit', function () {

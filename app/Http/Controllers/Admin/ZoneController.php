@@ -26,7 +26,7 @@ class ZoneController extends Controller
             'coordinates' => 'required',
         ]);
 
-        $value = $request->coordinates; 
+        $value = $request->coordinates;
         foreach(explode('),(',trim($value,'()')) as $index=>$single_array){
             if($index == 0)
             {
@@ -67,7 +67,7 @@ class ZoneController extends Controller
             'name' => 'required|unique:zones,name,'.$id,
             'coordinates' => 'required',
         ]);
-        $value = $request->coordinates; 
+        $value = $request->coordinates;
         foreach(explode('),(',trim($value,'()')) as $index=>$single_array){
             if($index == 0)
             {
@@ -145,7 +145,7 @@ class ZoneController extends Controller
         else{
             session()->put('zone_id', $id);
         }
-        
+
         return back();
     }
 
